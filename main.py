@@ -137,9 +137,9 @@ def register(
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
     request: Request,
-    token: str = Depends(lambda: request.cookies.get("access_token")),
     db: Session = Depends(get_db),
 ):
+    token = request.cookies.get("access_token")
     if not token:
         return RedirectResponse(url="/login")
     user = get_current_user(token, db)
