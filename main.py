@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
 import json
 import secrets
 from datetime import datetime, timedelta
@@ -16,7 +17,16 @@ from app.auth import (
 )
 from config import FIXED_APPS
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    init_db()
+    yield
+    # Shutdown (if needed)
+
+
+app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -24,11 +34,6 @@ templates = Jinja2Templates(directory="templates")
 # Check if setup needed
 def needs_setup(db: Session):
     return db.query(User).filter(User.role == "super_admin").count() == 0
-
-
-@app.on_event("startup")
-def startup_event():
-    init_db()
 
 
 @app.get("/", response_class=HTMLResponse)
