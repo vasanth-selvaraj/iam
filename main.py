@@ -31,6 +31,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
+# Helper function to get access token from cookies
+def get_access_token(request: Request) -> str:
+    return request.cookies.get("access_token")
+
+
 # Check if setup needed
 def needs_setup(db: Session):
     return db.query(User).filter(User.role == "super_admin").count() == 0
@@ -137,9 +142,9 @@ def register(
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
     request: Request,
+    token: str = Depends(get_access_token),
     db: Session = Depends(get_db),
 ):
-    token = request.cookies.get("access_token")
     if not token:
         return RedirectResponse(url="/login")
     user = get_current_user(token, db)
