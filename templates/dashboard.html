@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<p>Welcome, {{ user.username }} (Role: {{ user.role }})</p>
+{% if user.role == "super_admin" %}
+<h2>Registered Clients</h2>
+<ul>
+    {% for client in clients %}
+    <li>{{ client.app_name }} - Client ID: {{ client.client_id }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

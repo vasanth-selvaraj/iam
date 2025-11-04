@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Initial Setup</h1>
+<form method="post">
+    <label>Super Admin Username: <input type="text" name="username" required></label><br>
+    <label>Email: <input type="email" name="email" required></label><br>
+    <label>Password: <input type="password" name="password" required></label><br>
+    <label>Register MDX: <input type="checkbox" name="register_mdx"></label><br>
+    <label>Register GDX: <input type="checkbox" name="register_gdx"></label><br>
+    <button type="submit">Setup</button>
+</form>
+{% endblock %}

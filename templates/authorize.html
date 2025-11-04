@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Authorize {{ client.app_name }}</h1>
+<p>{{ client.app_name }} wants to access your account.</p>
+<form method="post">
+    <input type="hidden" name="client_id" value="{{ request.query_params.client_id }}">
+    <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+    <input type="hidden" name="state" value="{{ state }}">
+    <button type="submit" name="approve" value="true">Approve</button>
+    <button type="submit">Deny</button>
+</form>
+{% endblock %}
