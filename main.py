@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
+from typing import Optional
 import json
 import secrets
 from datetime import datetime, timedelta
@@ -32,7 +33,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 # Helper function to get access token from cookies
-def get_access_token(request: Request) -> str:
+def get_access_token(request: Request) -> Optional[str]:
     return request.cookies.get("access_token")
 
 
