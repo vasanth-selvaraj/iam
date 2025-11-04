@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
+from typing import Optional
 import json
 import secrets
 from datetime import datetime, timedelta
@@ -29,6 +30,11 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+
+# Helper function to get access token from cookies
+def get_access_token(request: Request) -> Optional[str]:
+    return request.cookies.get("access_token")
 
 
 # Check if setup needed
@@ -137,7 +143,7 @@ def register(
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(
     request: Request,
-    token: str = Depends(lambda: request.cookies.get("access_token")),
+    token: str = Depends(get_access_token),
     db: Session = Depends(get_db),
 ):
     if not token:
